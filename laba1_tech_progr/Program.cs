@@ -2,16 +2,17 @@
 
 namespace laba1_tech_progr
 {
-    class Menu
+    //класс, реализующий меню при запуске приложения
+    class Menu_First
     {
-        public bool menuu;
-        public  Menu(bool menuu)
+        public bool menu_choose;
+        public  Menu_First(bool menu)
         {
-            this.menuu = menuu;
+            this.menu_choose = menu;
         }
          public void Menu_1()
         {
-            if (menuu == false)
+            if (menu_choose == false)
                 System.Environment.Exit(1);
              
 
@@ -19,7 +20,8 @@ namespace laba1_tech_progr
 
         
     }
-    class Record
+    //класс, реализующий запись заявки
+    class Write_Record
     {
         public string surname;
         public string name;
@@ -28,7 +30,7 @@ namespace laba1_tech_progr
         public string kindofwork;
         public  int price;
 
-        public Record(string surname, string name, string patronymic, string brand, string kindofwork, int price)
+        public Write_Record(string surname, string name, string patronymic, string brand, string kindofwork, int price)
         {
             this.surname = surname;
             this.name = name;
@@ -42,25 +44,26 @@ namespace laba1_tech_progr
         
 
     }
-    class Menu1: Menu
+    //класс меню, которое вызывается после записи заявки
+    class Menu_Second: Menu_First
     {
-        public bool print_record;
+        public bool menu_sec_choose;
 
-        public Menu1( bool print_record, bool menuu = false) : base(menuu)
+        public Menu_Second( bool menu_sec_choose, bool menuu = false) : base(menuu)
         {
-            this.print_record = print_record;
+            this.menu_sec_choose = menu_sec_choose;
         }
         public void Menu_1()
         {
-            if(print_record==false)
+            if(menu_sec_choose==false)
                 System.Environment.Exit(1);
 
         }
 
 
     }
-
-    class Print_Ticket : Record
+        //класс, реализирующий вывод квитанции
+    class Print_Ticket : Write_Record
     {
         public Print_Ticket(string surname, string name, string patronymic, string brand, string kindofwork, int price) : base(surname, name, patronymic, brand, kindofwork, price)
         {
@@ -71,7 +74,7 @@ namespace laba1_tech_progr
             this.kindofwork = kindofwork;
             this.price = price;
         }
-
+        //метод класса, выводящий квитанцию
         public void Print()
         {
             Console.WriteLine("КВИТАНЦИЯ");
@@ -89,15 +92,28 @@ namespace laba1_tech_progr
         {
             string Surname, Name, Patronymic, Kindofwork, Brand;
             int Price, menu_choose, menu_choose1;
-            bool menuu=true, print_record=true;
+            bool menuu = true, print_record = true;
             Console.WriteLine("Для того, чтобы сделать запись, введите 1, для закрытия программы введите 0");
-            menu_choose= Convert.ToInt32 (Console.ReadLine());
+            menu_choose = Convert.ToInt32(Console.ReadLine());
             if (menu_choose == 0)
                 menuu = false;
-
-             
-            Menu menu1 = new Menu(menuu);
+            Menu_First menu1 = new Menu_First(menuu);
             menu1.Menu_1();
+            //функция для записи информация клиента
+            Write_Customer_Info(out Surname, out Name, out Patronymic, out Kindofwork, out Brand, out Price);
+            Write_Record rec1 = new Write_Record(Surname, Name, Patronymic, Brand, Kindofwork, Price);
+            Console.WriteLine("Для того, чтобы вывести квитанцию, введите 1, для закрытия программы введите 0");
+            menu_choose1 = Convert.ToInt32(Console.ReadLine());
+            if (menu_choose1 == 0)
+                print_record = false;
+            Menu_Second menu2 = new Menu_Second(print_record);
+            menu2.Menu_1();
+            Print_Ticket print = new Print_Ticket(Surname, Name, Patronymic, Brand, Kindofwork, Price);
+            print.Print();
+        }
+
+        private static void Write_Customer_Info(out string Surname, out string Name, out string Patronymic, out string Kindofwork, out string Brand, out int Price)
+        {
             Console.WriteLine("Фамилия ");
             Surname = Console.ReadLine();
             Console.WriteLine("Имя ");
@@ -110,16 +126,6 @@ namespace laba1_tech_progr
             Kindofwork = Console.ReadLine();
             Console.WriteLine("Стоимость");
             Price = Convert.ToInt32(Console.ReadLine());
-            Record rec1 = new Record(Surname, Name, Patronymic, Brand, Kindofwork, Price);
-            Console.WriteLine("Для того, чтобы вывести квитанцию, введите 1, для закрытия программы введите 0");
-            menu_choose1 = Convert.ToInt32(Console.ReadLine());
-            if (menu_choose1 == 0)
-                print_record = false;
-            Menu1 menu2 = new Menu1(print_record);
-            menu2.Menu_1();
-
-            Print_Ticket print =  new Print_Ticket(Surname, Name, Patronymic, Brand, Kindofwork, Price);
-            print.Print();
         }
     }
 }
